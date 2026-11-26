@@ -20,7 +20,7 @@ function renderSopirTable(list) {
       <td>
         <div class="table-actions" style="justify-content:flex-end;">
           <button class="btn-icon" onclick="openSopirModal('${s.ID}')">✏️</button>
-          <button class="btn-icon" onclick="handleDeleteSopir('${s.ID}', '${s.Nama.replace(/'/g, "\\'")}')">🗑️</button>
+          <button class="btn-icon" onclick="handleDeleteSopir('${s.ID}', '${String(s.Nama).replace(/'/g, "\\'")}')">🗑️</button>
         </div>
       </td>
     </tr>

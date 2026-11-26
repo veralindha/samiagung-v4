@@ -21,7 +21,7 @@ function renderSupplierTable(list) {
       <td>
         <div class="table-actions" style="justify-content:flex-end;">
           <button class="btn-icon" onclick="openSupplierModal('${p.ID}')">✏️</button>
-          <button class="btn-icon" onclick="handleDeleteSupplier('${p.ID}', '${p.Nama.replace(/'/g, "\\'")}')">🗑️</button>
+          <button class="btn-icon" onclick="handleDeleteSupplier('${p.ID}', '${String(p.Nama).replace(/'/g, "\\'")}')">🗑️</button>
         </div>
       </td>
     </tr>
@@ -32,7 +32,7 @@ function filterSupplierTable() {
   const q = document.getElementById('supplier-search').value.toLowerCase().trim();
   if (!q) { renderSupplierTable(SUPPLIER_CACHE); return; }
   const filtered = SUPPLIER_CACHE.filter(p =>
-    (p.Nama || '').toLowerCase().includes(q) || (p.Kontak || '').toLowerCase().includes(q)
+    String(p.Nama || '').toLowerCase().includes(q) || String(p.Kontak || '').toLowerCase().includes(q)
   );
   renderSupplierTable(filtered);
 }

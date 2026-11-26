@@ -20,7 +20,7 @@ function renderProdukGroups() {
     }
 
     wrap.innerHTML = PRODUK_CACHE.map(p => {
-      const namaProduk = p.NamaProduk || '(tanpa nama)';
+      const namaProduk = String(p.NamaProduk || '(tanpa nama)');
       const namaProdukEsc = namaProduk.replace(/'/g, "\\'");
       const menipis = Number(p.Stok) <= Number(p.StokMinimum);
       const subList = (SUBPRODUK_CACHE || []).filter(s => s.ProdukID === p.ID);
@@ -49,7 +49,7 @@ function renderProdukGroups() {
             ${subList.length === 0
               ? '<div class="empty-state" style="padding:14px;">Belum ada sub produk untuk "' + namaProduk + '".</div>'
               : subList.map(s => {
-                  const namaSub = s.NamaSubProduk || '(tanpa nama)';
+                  const namaSub = String(s.NamaSubProduk || '(tanpa nama)');
                   const namaSubEsc = namaSub.replace(/'/g, "\\'");
                   return `
                   <div class="subproduk-chip-row">

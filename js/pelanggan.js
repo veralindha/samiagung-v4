@@ -21,7 +21,7 @@ function renderPelangganTable(list) {
       <td>
         <div class="table-actions" style="justify-content:flex-end;">
           <button class="btn-icon" onclick="openPelangganModal('${p.ID}')">✏️</button>
-          <button class="btn-icon" onclick="handleDeletePelanggan('${p.ID}', '${p.Nama.replace(/'/g, "\\'")}')">🗑️</button>
+          <button class="btn-icon" onclick="handleDeletePelanggan('${p.ID}', '${String(p.Nama).replace(/'/g, "\\'")}')">🗑️</button>
         </div>
       </td>
     </tr>
@@ -32,7 +32,7 @@ function filterPelangganTable() {
   const q = document.getElementById('pelanggan-search').value.toLowerCase().trim();
   if (!q) { renderPelangganTable(PELANGGAN_CACHE); return; }
   const filtered = PELANGGAN_CACHE.filter(p =>
-    (p.Nama || '').toLowerCase().includes(q) || (p.Kontak || '').toLowerCase().includes(q)
+    String(p.Nama || '').toLowerCase().includes(q) || String(p.Kontak || '').toLowerCase().includes(q)
   );
   renderPelangganTable(filtered);
 }

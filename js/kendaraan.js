@@ -20,7 +20,7 @@ function renderKendaraanTable(list) {
       <td>
         <div class="table-actions" style="justify-content:flex-end;">
           <button class="btn-icon" onclick="openKendaraanModal('${k.ID}')">✏️</button>
-          <button class="btn-icon" onclick="handleDeleteKendaraan('${k.ID}', '${k.NomorKendaraan.replace(/'/g, "\\'")}')">🗑️</button>
+          <button class="btn-icon" onclick="handleDeleteKendaraan('${k.ID}', '${String(k.NomorKendaraan).replace(/'/g, "\\'")}')">🗑️</button>
         </div>
       </td>
     </tr>

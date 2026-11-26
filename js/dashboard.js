@@ -1,6 +1,36 @@
 let chartBulanan = null;
 let chartProduk = null;
 
+/* Tampilan grafik (warna & gaya saja) */
+const CHART_LINE = '#3F7D68';
+const CHART_BAR = '#5E9C86';
+const CHART_BAR_HOVER = '#3F7D68';
+const CHART_GRID = '#EDF2EF';
+const CHART_TEXT = '#6B7A73';
+
+function applyChartDefaults() {
+  if (!window.Chart) return;
+  Chart.defaults.font.family = "'DM Sans', 'Inter', 'Segoe UI', sans-serif";
+  Chart.defaults.font.size = 12;
+  Chart.defaults.color = CHART_TEXT;
+}
+
+const CHART_TOOLTIP = {
+  backgroundColor: '#1F2D27',
+  titleColor: '#FFFFFF',
+  bodyColor: '#E5F0EA',
+  padding: 10,
+  cornerRadius: 10,
+  displayColors: false,
+  boxPadding: 4
+};
+
+function formatTickRupiah(v) {
+  if (v >= 1000000) return 'Rp ' + (v / 1000000).toLocaleString('id-ID', { maximumFractionDigits: 1 }) + ' jt';
+  if (v >= 1000) return 'Rp ' + (v / 1000).toLocaleString('id-ID', { maximumFractionDigits: 1 }) + ' rb';
+  return 'Rp ' + v;
+}
+
 function loadDashboardPage() {
   serverCall('getDashboardStats', [], renderDashboard);
 }
@@ -54,6 +84,7 @@ function renderChartBulanan(data) {
   });
   const values = data.map(d => d.total);
 
+  applyChartDefaults();
   if (chartBulanan) chartBulanan.destroy();
   chartBulanan = new Chart(ctx, {
     type: 'line',
@@ -62,19 +93,28 @@ function renderChartBulanan(data) {
       datasets: [{
         label: 'Omzet',
         data: values,
-        borderColor: '#c9962b',
-        backgroundColor: 'rgba(201,150,43,0.12)',
+        borderColor: CHART_LINE,
+        backgroundColor: 'rgba(63,125,104,0.10)',
+        borderWidth: 2.5,
         fill: true,
         tension: 0.35,
-        pointBackgroundColor: '#1f4d3d',
-        pointRadius: 4
+        pointBackgroundColor: '#FFFFFF',
+        pointBorderColor: CHART_LINE,
+        pointBorderWidth: 2,
+        pointRadius: 4,
+        pointHoverRadius: 6
       }]
     },
     options: {
-      plugins: { legend: { display: false } },
+      plugins: {
+        legend: { display: false },
+        tooltip: Object.assign({}, CHART_TOOLTIP, {
+          callbacks: { label: c => ' ' + formatRupiah(c.parsed.y) }
+        })
+      },
       scales: {
-        y: { ticks: { callback: v => 'Rp ' + (v/1000) + 'rb' }, grid: { color: '#eef1f0' } },
-        x: { grid: { display: false } }
+        y: { ticks: { callback: formatTickRupiah, color: CHART_TEXT }, grid: { color: CHART_GRID }, border: { display: false } },
+        x: { ticks: { color: CHART_TEXT }, grid: { display: false }, border: { display: false } }
       }
     }
   });
@@ -83,6 +123,7 @@ function renderChartBulanan(data) {
 function renderChartProduk(list) {
   const ctx = document.getElementById('chart-produk');
   const top = list.slice(0, 6);
+  applyChartDefaults();
   if (chartProduk) chartProduk.destroy();
   chartProduk = new Chart(ctx, {
     type: 'bar',
@@ -91,16 +132,17 @@ function renderChartProduk(list) {
       datasets: [{
         label: 'Qty Terjual',
         data: top.map(p => p.qty),
-        backgroundColor: '#2a6650',
-        borderRadius: 6,
-        maxBarThickness: 34
+        backgroundColor: CHART_BAR,
+        hoverBackgroundColor: CHART_BAR_HOVER,
+        borderRadius: 8,
+        maxBarThickness: 44
       }]
     },
     options: {
-      plugins: { legend: { display: false } },
+      plugins: { legend: { display: false }, tooltip: CHART_TOOLTIP },
       scales: {
-        y: { beginAtZero: true, grid: { color: '#eef1f0' } },
-        x: { grid: { display: false } }
+        y: { beginAtZero: true, ticks: { color: CHART_TEXT }, grid: { color: CHART_GRID }, border: { display: false } },
+        x: { ticks: { color: CHART_TEXT }, grid: { display: false }, border: { display: false } }
       }
     }
   });
